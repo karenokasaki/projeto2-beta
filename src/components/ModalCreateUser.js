@@ -1,4 +1,4 @@
-import { Button, Modal, Form, Row, Col } from "react-bootstrap";
+import { Button, Modal, Form, Row, Col, Container } from "react-bootstrap";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -17,9 +17,15 @@ function ModalCreateUser({ setReload, reload }) {
     cargo: "",
     task: "",
     progresso: "",
+    foto: "",
+    taskCompletadas: [],
   });
 
   function handleChange(e) {
+    if (e.target.name === "active") {
+      setForm({ ...form, active: e.target.checked });
+      return;
+    }
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
@@ -42,6 +48,10 @@ function ModalCreateUser({ setReload, reload }) {
         dataAdmissao: "",
         active: true,
         cargo: "",
+        task: "",
+        progresso: "",
+        foto: "",
+        taskCompletadas: [],
       });
       toast.success("Funcionário criado com sucesso!");
     } catch (error) {
@@ -172,6 +182,17 @@ function ModalCreateUser({ setReload, reload }) {
                     onChange={handleChange}
                   />
                 </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Foto</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Insira url da foto"
+                    name="foto"
+                    autoFocus
+                    onChange={handleChange}
+                    value={form.foto}
+                  />
+                </Form.Group>
               </Col>
             </Row>
           </Form>
@@ -185,7 +206,8 @@ function ModalCreateUser({ setReload, reload }) {
               name="active"
               type="checkbox"
               label="Funcionário ativo na empresa"
-              defaultChecked
+              checked={form.active}
+              onChange={handleChange}
             />
           </Form.Group>
           <Button variant="success" onClick={handleSubmit}>

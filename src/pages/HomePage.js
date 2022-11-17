@@ -1,6 +1,15 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Table, Container, Button, Form } from "react-bootstrap";
+import {
+  Table,
+  Container,
+  Button,
+  Form,
+  ProgressBar,
+  FloatingLabel,
+  Row,
+  Col,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ModalCreateUser from "../components/ModalCreateUser";
 import Relatorios from "../components/Relatorios";
@@ -26,26 +35,32 @@ function HomePage() {
   function handleChange(e) {
     setSearch(e.target.value);
   }
-  console.log(users);
+
   return (
     <div>
       <h1 className="my-3">Dashboard</h1>
 
       <Container>
-        <Form.Control
-          placeholder="Pesquise pelo nome / status / cargo ou departamento"
-          value={search}
-          onChange={handleChange}
-        />
+        <FloatingLabel
+          controlId="floatingInput"
+          label="Pesquise pelo Nome / Status / Cargo ou Departamento"
+          className="mb-3"
+        >
+          <Form.Control
+            placeholder="Pesquise pelo nome / status / cargo ou departamento"
+            value={search}
+            onChange={handleChange}
+          />
+        </FloatingLabel>
 
-        <Table striped bordered hover variant="light-dark">
+        <Table striped bordered hover variant="light-dark" className="mt-2">
           <thead>
             <tr>
               <th>Nome</th>
               <th>Task</th>
-              <th>%</th>
+              <th>Progresso</th>
               <th>Status</th>
-              <th>Cargo</th>
+
               <th>Departamento</th>
               <th>Action</th>
             </tr>
@@ -55,27 +70,27 @@ function HomePage() {
               users
                 .filter(
                   (user) =>
-                    user.nome
-                      .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()) ||
-                    user.status
-                      .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()) ||
+                    user.nome.toLowerCase().includes(search.toLowerCase()) ||
+                    user.status.toLowerCase().includes(search.toLowerCase()) ||
                     user.departamento
-                      .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()) ||
-                    user.cargo
-                      .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
+                      .toLowerCase()
+                      .includes(search.toLowerCase()) ||
+                    user.cargo.toLowerCase().includes(search.toLowerCase())
                 )
                 .map((user) => {
                   return (
                     <tr className={user.active ? "" : "table-danger"}>
                       <td>{user.nome}</td>
                       <td>{user.task}</td>
-                      <td>{user.progresso}</td>
+                      <td>
+                        <ProgressBar
+                          now={user.progresso}
+                          label={`${user.progresso}%`}
+                          variant="info"
+                          animated
+                        />
+                      </td>
                       <td>{user.status}</td>
-                      <td>{user.cargo}</td>
                       <td>{user.departamento}</td>
                       <td>
                         <Link to={`/user/${user._id}`}>
@@ -89,11 +104,11 @@ function HomePage() {
                 })}
           </tbody>
         </Table>
+
+        <ModalCreateUser setReload={setReload} reload={reload} />
+
+        <Relatorios users={users} />
       </Container>
-
-      <ModalCreateUser setReload={setReload} reload={reload} />
-
-      <Relatorios />
     </div>
   );
 }

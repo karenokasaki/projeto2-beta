@@ -53,7 +53,7 @@ function HomePage() {
           />
         </FloatingLabel>
 
-        <Table striped bordered hover variant="light-dark" className="mt-2">
+        <Table bordered hover variant="light-dark" className="mt-2">
           <thead>
             <tr>
               <th>Nome</th>
